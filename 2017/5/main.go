@@ -20,10 +20,9 @@ func run(jumps []int, incr func(int) int) int {
 		ip = nip
 		n++
 		if ip >= len(jm) {
-			break
+			return n
 		}
 	}
-	return n
 }
 
 func first(jumps []int) int {
