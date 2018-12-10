@@ -80,10 +80,10 @@ func main() {
 	}
 
 	{ // first
-		fmt.Println(firstSum(root))
+		fmt.Println("first:", firstSum(root))
 	}
 
 	{ // second
-		fmt.Println(secondSum(root))
+		fmt.Println("second:", secondSum(root))
 	}
 }
