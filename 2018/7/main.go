@@ -174,7 +174,7 @@ func main() {
 		}
 	}
 
-	if false { // first
+	{ // first
 		var order strings.Builder
 		for {
 			pn := FindNext(begins)
@@ -187,14 +187,12 @@ func main() {
 			order.WriteByte(step.Name)
 		}
 		fmt.Println("first:", order.String())
-
 		for i, _ := range steps {
 			steps[i].Done = false
 		}
 	}
 
 	{ // second
-
 		var sec uint32
 		workers := make([]Worker, 5)
 		for {
@@ -203,15 +201,11 @@ func main() {
 				if worker.Task != nil {
 					worker.Progress++
 					if worker.Progress >= worker.Work {
-						fmt.Printf("%d-> task %c done (worker: %d)\n",
-							sec, worker.Task.Name,
-							i)
 						worker.Task.Done = true
 						worker.Task = nil
 					}
 				}
 			}
-
 			done := true
 			for _, step := range steps {
 				if !step.Done {
@@ -222,7 +216,6 @@ func main() {
 			if done {
 				break
 			}
-
 			pn := FindNext(begins)
 			if len(pn) > 0 {
 				sort.Sort(ByAlpha(pn))
@@ -233,9 +226,6 @@ func main() {
 						worker.Task.InProgress = true
 						worker.Work = 60 + uint32(worker.Task.Name-'A') + 1
 						worker.Progress = 0
-						fmt.Printf("%d-> task %c in progress (worker: %d) (work:%d)\n",
-							sec, worker.Task.Name,
-							i, worker.Work)
 						pn = FindNext(begins)
 						if len(pn) == 0 {
 							break
@@ -244,9 +234,8 @@ func main() {
 					}
 				}
 			}
-
 			sec++
 		}
-		fmt.Println(sec)
+		fmt.Println("second:", sec)
 	}
 }
