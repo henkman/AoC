@@ -1,7 +1,6 @@
 // gcc -Wall -s -O2 -o main main.c && cat input.txt | main
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 typedef struct {
 	int x, y;
@@ -110,8 +109,8 @@ int main(int argc, char** argv)
 			printf("%d,%d -> %d,%d\n", a->x, a->y, b->x, b->y);
 		}
 		printf("------\n");
-		for (int i = 0; i < first.count; i++) {
-			Line* part = &first.part[i];
+		for (int i = 0; i < second.count; i++) {
+			Line* part = &second.part[i];
 			Point* a = &part->a;
 			Point* b = &part->b;
 			printf("%d,%d -> %d,%d\n", a->x, a->y, b->x, b->y);
