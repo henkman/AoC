@@ -65,7 +65,7 @@ static void wire_read(Wire* wire, FILE* fd)
 	char dir;
 	int length;
 	for (;;) {
-		fscanf(stdin, "%c%d", &dir, &length);
+		fscanf(fd, "%c%d", &dir, &length);
 		switch (dir) {
 		case 'R':
 			part.b.x = part.a.x + length;
@@ -85,7 +85,7 @@ static void wire_read(Wire* wire, FILE* fd)
 			break;
 		}
 		wire_add_part(wire, &part);
-		int o = fgetc(stdin);
+		int o = fgetc(fd);
 		if (o != ',') {
 			break;
 		}
