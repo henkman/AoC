@@ -59,5 +59,5 @@ func (pwc *PasswordCheck) IsValidNew() bool {
 	b := []byte(pwc.Pass)
 	min := b[pwc.Min-1] == pwc.Letter
 	max := b[pwc.Max-1] == pwc.Letter
-	return (min && !max) || (max && !min)
+	return min != max
 }
