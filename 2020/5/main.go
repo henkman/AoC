@@ -28,12 +28,8 @@ func main() {
 	}
 	seatsTaken := make([]bool, 8*128)
 	seatsTakenRange := Range{Low: len(seatsTaken), High: 0}
-	first := 0
 	for _, entry := range entries {
 		bpi := decodeBoardingPass(entry)
-		if bpi.SeatId > first {
-			first = bpi.SeatId
-		}
 		if bpi.SeatId < seatsTakenRange.Low {
 			seatsTakenRange.Low = bpi.SeatId
 		}
@@ -42,7 +38,7 @@ func main() {
 		}
 		seatsTaken[bpi.SeatId] = true
 	}
-	fmt.Println("first:", first)
+	fmt.Println("first:", seatsTakenRange.High)
 
 	for i := seatsTakenRange.Low; i < seatsTakenRange.High; i++ {
 		if !seatsTaken[i] {
