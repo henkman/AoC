@@ -52,10 +52,6 @@ func main() {
 						panic(err)
 					}
 					child := bags.FindByName(m[2])
-					child.Parents = append(parent.Parents, BagRelation{
-						Bag:      parent,
-						Quantity: n,
-					})
 					parent.Children = append(parent.Children, BagRelation{
 						Bag:      child,
 						Quantity: n,
@@ -71,16 +67,14 @@ func main() {
 		}
 	}
 
-	const MYBAG = `shiny gold`
+	shinygold := bags.FindByName(`shiny gold`)
 	first := 0
 	for _, bag := range bags {
-		if CanContainRecursive(&bag, MYBAG) {
+		if CanContainRecursive(&bag, shinygold) {
 			first++
 		}
 	}
-	fmt.Println(first)
-
-	shinygold := bags.FindByName(MYBAG)
+	fmt.Println("first:", first)
 	fmt.Println("second:", CountBagsRecursively(shinygold))
 }
 
@@ -93,9 +87,9 @@ func CountBagsRecursively(bag *Bag) uint64 {
 	return count
 }
 
-func CanContainRecursive(bag *Bag, search string) bool {
+func CanContainRecursive(bag, search *Bag) bool {
 	for _, child := range bag.Children {
-		if child.Bag.Name == search {
+		if child.Bag == search {
 			return true
 		}
 		if CanContainRecursive(child.Bag, search) {
@@ -107,7 +101,6 @@ func CanContainRecursive(bag *Bag, search string) bool {
 
 type Bag struct {
 	Name     string
-	Parents  []BagRelation
 	Children []BagRelation
 }
 
