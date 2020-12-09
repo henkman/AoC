@@ -33,19 +33,17 @@ func main() {
 		}
 	}
 
-	var first uint
 	const WINDOW = 25
-	o := WINDOW
+	var first uint
 find_first:
-	for {
+	for o := WINDOW; o < len(nums); o++ {
 		num := nums[o]
 		for i, a := range nums[o-WINDOW : o] {
 			for e, b := range nums[o-WINDOW : o] {
 				if i == e {
 					continue
 				}
-				if num == a+b {
-					o++
+				if a+b == num {
 					continue find_first
 				}
 			}
@@ -57,7 +55,7 @@ find_first:
 
 find_weakness:
 	for w := 2; ; w++ {
-		for o = w; o < len(nums); o++ {
+		for o := w; o < len(nums); o++ {
 			var sum uint
 			for _, num := range nums[o-w : o] {
 				sum += num
