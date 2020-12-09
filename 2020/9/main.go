@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	nums := []uint{}
+	nums := []uint64{}
 	{
 		bin := bufio.NewReader(os.Stdin)
 		for {
@@ -22,7 +22,7 @@ func main() {
 				if err != nil {
 					panic(err)
 				}
-				nums = append(nums, uint(num))
+				nums = append(nums, num)
 			}
 			if err != nil {
 				if err == io.EOF {
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	const WINDOW = 25
-	var first uint
+	var first uint64
 find_first:
 	for o := WINDOW; o < len(nums); o++ {
 		num := nums[o]
@@ -56,12 +56,12 @@ find_first:
 find_weakness:
 	for w := 2; ; w++ {
 		for o := w; o < len(nums); o++ {
-			var sum uint
+			var sum uint64
 			for _, num := range nums[o-w : o] {
 				sum += num
 			}
 			if sum == first {
-				weakness := make([]uint, w)
+				weakness := make([]uint64, w)
 				copy(weakness, nums[o-w:o])
 				sort.Sort(UintSlice(weakness))
 				fmt.Println("second:", weakness[0]+weakness[len(weakness)-1])
@@ -71,7 +71,7 @@ find_weakness:
 	}
 }
 
-type UintSlice []uint
+type UintSlice []uint64
 
 func (p UintSlice) Len() int           { return len(p) }
 func (p UintSlice) Less(i, j int) bool { return p[i] < p[j] }
