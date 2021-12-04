@@ -26,7 +26,11 @@ func main() {
 
 	boards := []Board{}
 	for scanner.Scan() {
-		var board Board
+		board := Board{
+			Numbers: make([]int, BOARDSIZE*BOARDSIZE),
+			Marked:  make([]bool, BOARDSIZE*BOARDSIZE),
+		}
+		o := 0
 		for i := 0; i < BOARDSIZE; i++ {
 			if !scanner.Scan() {
 				panic("strange board")
@@ -35,10 +39,10 @@ func main() {
 			m := reNumber.FindAllString(line, -1)
 			for _, e := range m {
 				v, _ := strconv.Atoi(e)
-				board.Numbers = append(board.Numbers, v)
+				board.Numbers[o] = v
+				o++
 			}
 		}
-		board.Marked = make([]bool, len(board.Numbers))
 		boards = append(boards, board)
 	}
 
