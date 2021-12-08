@@ -13,17 +13,19 @@ func main() {
 	for scanner.Scan() {
 		line := scanner.Text()
 		pipe := strings.IndexByte(line, '|')
-		input := strings.Split(line[:pipe-1], " ")
-		output := strings.Split(line[pipe+2:], " ")
-		form := decodeFormula(input, output)
-		e := 1000
+		in := strings.Split(line[:pipe-1], " ")
+		out := strings.Split(line[pipe+2:], " ")
+		form := decodeFormula(append(in, out...))
+		op := form[len(in):]
+		e := 1
 		on := 0
-		for _, d := range form.Output {
+		for i := len(op) - 1; i >= 0; i-- {
+			d := op[i]
 			if d == 1 || d == 4 || d == 7 || d == 8 {
 				first++
 			}
 			on += e * d
-			e /= 10
+			e *= 10
 		}
 		second += on
 	}
@@ -31,51 +33,24 @@ func main() {
 	fmt.Println("second:", second)
 }
 
-type Formula struct {
-	Input  []int
-	Output []int
-}
-
-func decodeFormula(input, output []string) Formula {
-	indigit := parseSegments(input)
-	outdigit := parseSegments(output)
-
+func decodeFormula(s []string) []int {
+	segs := parseSegments(s)
 	abcdefg := Segments(0xFF >> 1)
 	var cf, bcdf, acf Segments
 	digits := map[Segments]int{}
 	digits[abcdefg] = 8
 
-	pot069 := [3]Segments{}
-	{
-		mpot069 := map[Segments]bool{}
-		for _, d := range indigit {
-			switch d.Count() {
-			case 2:
-				cf = d
-			case 3:
-				acf = d
-			case 4:
-				bcdf = d
-			case 6:
-				mpot069[d] = true
-			}
-		}
-		for _, d := range outdigit {
-			switch d.Count() {
-			case 2:
-				cf = d
-			case 3:
-				acf = d
-			case 4:
-				bcdf = d
-			case 6:
-				mpot069[d] = true
-			}
-		}
-		o := 0
-		for d, _ := range mpot069 {
-			pot069[o] = d
-			o++
+	pot069 := map[Segments]bool{}
+	for _, d := range segs {
+		switch d.Count() {
+		case 2:
+			cf = d
+		case 3:
+			acf = d
+		case 4:
+			bcdf = d
+		case 6:
+			pot069[d] = true
 		}
 	}
 	digits[cf] = 1
@@ -85,7 +60,7 @@ func decodeFormula(input, output []string) Formula {
 	bd := bcdf ^ cf
 
 	var d, c, e Segments
-	for _, p := range pot069 {
+	for p, _ := range pot069 {
 		t := abcdefg ^ p
 		if t&bd != 0 {
 			d = t
@@ -105,16 +80,11 @@ func decodeFormula(input, output []string) Formula {
 	f := cf ^ c
 	digits[abcdefg^(b|f)] = 2
 
-	in := make([]int, len(input))
-	for i, d := range indigit {
-		in[i] = digits[d]
+	form := make([]int, len(segs))
+	for i, d := range segs {
+		form[i] = digits[d]
 	}
-	out := make([]int, len(output))
-	for i, d := range outdigit {
-		out[i] = digits[d]
-	}
-
-	return Formula{Input: in, Output: out}
+	return form
 }
 
 func parseSegments(s []string) []Segments {
