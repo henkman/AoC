@@ -21,43 +21,34 @@ func main() {
 			hm.Visited = make([]bool, hm.W*hm.H)
 		}
 	}
-	{
-		var first int
-		for y := 0; y < hm.H; y++ {
-		next:
-			for x := 0; x < hm.W; x++ {
-				p := hm.At(x, y)
-				for _, dir := range DIRS {
-					tx := x + dir.X
-					ty := y + dir.Y
-					op := hm.At(tx, ty)
-					if p >= op {
-						continue next
-					}
+
+	basins := []int{}
+	var first int
+	for y := 0; y < hm.H; y++ {
+	next:
+		for x := 0; x < hm.W; x++ {
+			p := hm.At(x, y)
+			for _, dir := range DIRS {
+				tx := x + dir.X
+				ty := y + dir.Y
+				op := hm.At(tx, ty)
+				if p >= op {
+					continue next
 				}
-				first += p + 1
 			}
+			first += p + 1
+			basin := hm.CountBasinSize(x, y)
+			basins = append(basins, basin)
 		}
-		fmt.Println("first:", first)
 	}
-	{
-		basins := []int{}
-		for y := 0; y < hm.H; y++ {
-			for x := 0; x < hm.W; x++ {
-				if hm.At(x, y) == 9 || hm.WasVisited(x, y) {
-					continue
-				}
-				basin := hm.CountBasinSize(x, y)
-				basins = append(basins, basin)
-			}
-		}
-		sort.Ints(basins)
-		second := basins[len(basins)-3]
-		for _, b := range basins[len(basins)-2:] {
-			second *= b
-		}
-		fmt.Println("second:", second)
+	fmt.Println("first:", first)
+
+	sort.Ints(basins)
+	second := basins[len(basins)-3]
+	for _, b := range basins[len(basins)-2:] {
+		second *= b
 	}
+	fmt.Println("second:", second)
 }
 
 var (
